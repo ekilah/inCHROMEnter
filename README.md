@@ -14,3 +14,4 @@ I got this idea when going through far too many sequential GitHub issues while g
 ###Thanks to these sites/people:
 + A good starter tutorial - http://mycodefixes.blogspot.in/2012/03/building-chrome-extensions-from-scratch.html
 + Obviously... - http://developer.chrome.com/extensions/
++ http://www.cssbuttongenerator.com/
