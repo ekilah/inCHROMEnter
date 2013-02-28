@@ -12,6 +12,8 @@
   "js": ["jquery-1.9.1.min.js", "allpages.js"]
   
   }], 
+  
+  "options_page": "options.html",
 
   "permissions": [
     "tabs"

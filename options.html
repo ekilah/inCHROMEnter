@@ -1,0 +1,39 @@
+<html>
+<head>
+	<link rel="shortcut icon" href="/icon.png" type="image/png"/>
+	<title>Options for Color Chooser</title>
+	<script type="text/javascript" src="options.js"></script>
+	
+	<style>
+		td{
+			vertical-align:text-top;
+		}
+		td.description{
+			font-family:monospace;
+		}
+		
+	</style>
+</head>
+<body onload="loadDefaults()">
+	<h3>inCHROMEnter</h3>v0.2 - Monroe Ekilah - <a href="https://github.com/ekilah/inCHROMEnter"> GitHub Repo</a><h4>Options Page</h4><hr>
+	
+	<br />
+	
+	<fieldset style="width:90%;min-width:40em;margin-left:auto;margin-right:auto;">
+	<legend> Choose regex(s) to use for URL matching</legend>
+	<table>
+		<tr><td style="min-width:15em"><input type="checkbox" name="default[]" id="default1" >/[\d]+$/</input></td><td style="min-width:25em" class="description">Captures numbers at the end of the URL</td></tr>
+		<tr><td><input type="checkbox" name="default[]" id="default2">/(.*\/)([\d]+)([\/]?[.\w]{0,5}$)/</input>
+		</td><td class="description">Caputres numbers at the end of a URL that are prepended by a forward slash (/) and optionally followed by another forward slash and/or a 4-character extension, like .html</td></tr>
+		
+	
+	</table>
+	<button onclick="saveOptions()">Apply & Save</button>
+	<button onclick="restoreDefaults()">Restore Defaults</button>
+	
+	</fieldset>
+	
+	
+	
+</body>
+</html>
