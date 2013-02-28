@@ -22,9 +22,7 @@ function onScriptStart(){
 		options = new Array();
 		for(var i in temp){
 			console.log("Parsing object["+i+"]: " + temp[i]);
-			treg = new RegExp(temp[i].regex);
-			console.log("Regex: " + treg);
-			options[i] = new objOption(temp[i].regex, temp[i].enabled.valueOf());
+			options[i] = new objOption(temp[i].strRegex, temp[i].enabled.valueOf());
 		}
 		console.log(options);
 		
@@ -68,8 +66,9 @@ function setCheckboxes(){
 	}
 }
 
-function objOption(regex, enabled){
-	this.regex = regex;
+ function objOption(regex, enabled){
+	this.strRegex = regex;
+	this.objRegex = new RegExp(regex);
 	this.enabled = new Boolean(enabled);
 	
 	this.isEnabled = isEnabled;
@@ -78,7 +77,7 @@ function objOption(regex, enabled){
 	}
 	this.setEnabled=setEnabled;
 	function setEnabled(en){
-		console.log("Set enabled for option("+this.regex+") called with value: " + en);
+		console.log("Set enabled for option("+this.strRegex+") called with value: " + en);
 		this.enabled = new Boolean(en);
 		console.log("  Now, it is: " + this.enabled.valueOf());
 	}
