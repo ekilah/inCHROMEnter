@@ -1,7 +1,61 @@
  var pattern = /(.*\/)([\d]+)([\/]?[.\w]{0,5}$)/; //if the URL ends in a number, which is preceeded by a forward slash, and optionally followed by a slash and/or optionally followed by an extension of up to 5 characters (including decimal)
  
+ function objOption(regex, enabled){
+	this.strRegex = regex;
+	this.objRegex = new RegExp(regex);
+	this.enabled = new Boolean(enabled);
+	
+	this.isEnabled = isEnabled;
+	function isEnabled(){
+		return this.enabled.valueOf();
+	}
+	this.setEnabled=setEnabled;
+	function setEnabled(en){
+		console.log("Set enabled for option("+this.strRegex+") called with value: " + en);
+		this.enabled = new Boolean(en);
+		console.log("  Now, it is: " + this.enabled.valueOf());
+	}
+}
+ 
  function checkForUrlMatch(tabId, changeInfo, tab) {
-  var isGoodUrl =  tab.url.match(pattern);
+	var opts;
+	opts = new Array();
+	var isGoodUrl;// =  tab.url.match(pattern);
+	
+	if(localStorage["options"]==null){
+		console.log("Options null in background");
+		
+		/**
+			The below code is all from options.js:loadDefaults()
+		*/
+			opts[0] = new objOption("[\\d]+$", true);
+			opts[1] = new objOption("(.*\\/)([\\d]+)([\\/]?[.\\w]{0,5}$)", true);
+			console.log("Default options loaded");
+		/** */
+	}else{
+		var temp=JSON.parse(localStorage["options"]);
+		console.log("Options seen in background: " + temp);
+		console.log(typeof temp + ", " + temp.length);
+		for(var i in temp){
+			console.log("Parsing object["+i+"]: " + temp[i]);
+			opts[i] = new objOption(temp[i].strRegex, temp[i].enabled.valueOf());
+			
+			console.log(opts[i].strRegex + ", " + opts[i].enabled);
+		}
+		console.log("After copy, options seen in background: " + opts);
+		console.log(typeof opts + ", " + opts.length);
+	}
+	for(var i in opts){
+		if(opts[i].enabled.valueOf() && tab.url.match(opts[i].objRegex)){
+			console.log("URL: <" + tab.url + "> matched regular expression: " + opts[i].strRegex);
+			isGoodUrl = true;
+			break;
+		}else{
+			console.log("URL: <" + tab.url + "> DID NOT match regular expression: " + opts[i].strRegex);
+		}
+	}
+
+  
   
   //tab.url.match(/github\.com/);
  // If the URL of the tab contains the string github.com

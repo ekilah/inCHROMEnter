@@ -2,8 +2,8 @@
 var options;
 
 function loadDefaults(){
-	options[0] = new objOption(/[\d]+$/, true);
-	options[1] = new objOption(/(.*\/)([\d]+)([\/]?[.\w]{0,5}$)/, true);
+	options[0] = new objOption("[\\d]+$", true);
+	options[1] = new objOption("(.*\\/)([\\d]+)([\\/]?[.\\w]{0,5}$)", true);
 	console.log("Default options loaded");
 	setCheckboxes();
 	console.log("Initial checkbox values set");
@@ -21,6 +21,9 @@ function onScriptStart(){
 		console.log(temp);
 		options = new Array();
 		for(var i in temp){
+			console.log("Parsing object["+i+"]: " + temp[i]);
+			treg = new RegExp(temp[i].regex);
+			console.log("Regex: " + treg);
 			options[i] = new objOption(temp[i].regex, temp[i].enabled.valueOf());
 		}
 		console.log(options);
