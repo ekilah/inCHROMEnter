@@ -2,7 +2,7 @@
 var options;
 
 function loadDefaults(){
-	options[0] = new objOption("[\\d]+$", true);
+	options[0] = new objOption("(.*)([\\d]+)($)", true);
 	options[1] = new objOption("(.*\\/)([\\d]+)([\\/]?[.\\w]{0,5}$)", true);
 	console.log("Default options loaded");
 	setCheckboxes();

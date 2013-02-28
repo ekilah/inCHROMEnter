@@ -1,5 +1,5 @@
- var pattern = /(.*\/)([\d]+)([\/]?[.\w]{0,5}$)/; //if the URL ends in a number, which is preceeded by a forward slash, and optionally followed by a slash and/or optionally followed by an extension of up to 5 characters (including decimal)
- 
+ //var pattern = /(.*\/)([\d]+)([\/]?[.\w]{0,5}$)/; //if the URL ends in a number, which is preceeded by a forward slash, and optionally followed by a slash and/or optionally followed by an extension of up to 5 characters (including decimal)
+var patterns;
  function objOption(regex, enabled){
 	this.strRegex = regex;
 	this.objRegex = new RegExp(regex);
@@ -18,8 +18,7 @@
 }
  
  function checkForUrlMatch(tabId, changeInfo, tab) {
-	var opts;
-	opts = new Array();
+	patterns= new Array();
 	var isGoodUrl;// =  tab.url.match(pattern);
 	
 	if(localStorage["options"]==null){
@@ -28,8 +27,8 @@
 		/**
 			The below code is all from options.js:loadDefaults()
 		*/
-			opts[0] = new objOption("[\\d]+$", true);
-			opts[1] = new objOption("(.*\\/)([\\d]+)([\\/]?[.\\w]{0,5}$)", true);
+			patterns[0] = new objOption("(.*)([\\d]+)($)", true);
+			patterns[1] = new objOption("(.*\\/)([\\d]+)([\\/]?[.\\w]{0,5}$)", true);
 			console.log("Default options loaded");
 		/** */
 	}else{
@@ -38,20 +37,20 @@
 		console.log(typeof temp + ", " + temp.length);
 		for(var i in temp){
 			console.log("Parsing object["+i+"]: " + temp[i]);
-			opts[i] = new objOption(temp[i].strRegex, temp[i].enabled.valueOf());
+			patterns[i] = new objOption(temp[i].strRegex, temp[i].enabled.valueOf());
 			
-			console.log(opts[i].strRegex + ", " + opts[i].enabled);
+			console.log(patterns[i].strRegex + ", " + patterns[i].enabled);
 		}
-		console.log("After copy, options seen in background: " + opts);
-		console.log(typeof opts + ", " + opts.length);
+		console.log("After copy, options seen in background: " + patterns);
+		console.log(typeof patterns + ", " + patterns.length);
 	}
-	for(var i in opts){
-		if(opts[i].enabled.valueOf() && tab.url.match(opts[i].objRegex)){
-			console.log("URL: <" + tab.url + "> matched regular expression: " + opts[i].strRegex);
+	for(var i in patterns){
+		if(patterns[i].enabled.valueOf() && tab.url.match(patterns[i].objRegex)){
+			console.log("URL: <" + tab.url + "> matched regular expression: " + patterns[i].strRegex);
 			isGoodUrl = true;
 			break;
 		}else{
-			console.log("URL: <" + tab.url + "> DID NOT match regular expression: " + opts[i].strRegex);
+			console.log("URL: <" + tab.url + "> DID NOT match regular expression: " + patterns[i].strRegex);
 		}
 	}
 
