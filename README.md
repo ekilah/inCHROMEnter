@@ -1,6 +1,8 @@
 inCHROMEnter
 ============
-
+Version 0.4.1
+--------
+Latest table version:  [0.4.1](https://github.com/ekilah/inCHROMEnter/tree/791c93617c2aa83b7c4788a226228d6f2e62523e) as of 3/1/2013. By Monroe Ekilah.
 A simple Chrome extension to increment/decrement the URL of the current tab for fast browsing.
 
 ###Why
@@ -17,6 +19,7 @@ I got this idea when going through far too many sequential GitHub issues while g
       + GitHub issues (the original intention of this project!)
 + Alt + '+' and Alt + '-' will increment/decrement,  in addition to the ugly buttons in the extension popup window.
   + The +/- keys on the numpad and the normal keyboard both work.
++ User options page functional! User can select from available regular expressions, and change the default increment/decrement value.
 
 ###Thanks to these sites/people:
 + A good starter tutorial - http://mycodefixes.blogspot.in/2012/03/building-chrome-extensions-from-scratch.html
