@@ -2,7 +2,7 @@ inCHROMEnter
 ============
 Version 0.4.2
 --------
-Latest stable version:  [0.4.2](https://github.com/ekilah/inCHROMEnter/tree/791c93617c2aa83b7c4788a226228d6f2e62523e) as of 3/1/2013. By Monroe Ekilah.
+Latest stable version:  [0.4.2](https://github.com/ekilah/inCHROMEnter/tree/ad5dc8d7090c1d202a9d5fca14fc8eb540964f74) as of 3/1/2013. By Monroe Ekilah.
 
 ###Welcome to inCHROMEnter!
 A simple Chrome extension to increment/decrement the URL of the current tab for fast browsing.
