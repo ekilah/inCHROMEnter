@@ -8,6 +8,7 @@ function incrementFromPopup(delta){
 		console.log("Patterns retrieved from background: " + patterns);
 		var oldurl = tab.url;
 		var newurl = null;
+		var alerted = false;
 		for(var i in patterns){
 			
 			var r = new RegExp(patterns[i].strRegex);
@@ -24,6 +25,14 @@ function incrementFromPopup(delta){
 					var tempNum= Number(num) + delta;
 					console.log("Int parsed after incrementation is (as a number): " +tempNum );
 				}
+				if(Number(num) + delta < 0){
+					console.error("Cannot handle negative numbers...");
+					if(!alerted){//don't bother whining about a negative number if we already did
+						alert("inCHROMEnter cannot produce negative numbers in URLs, because future string parsing will not interpret the negative sign. Sorry!");
+						alerted = true;
+					}
+					return fullMatch;
+				}
 				return pre + (Number(num)+delta) + post;
 			});
 			if(newurl!=null && newurl!=oldurl){
@@ -39,15 +48,24 @@ function incrementFromPopup(delta){
 	});
 }
 
-function decrementFromPopup(delta){
-	incrementFromPopup(-1*delta);
+
+
+function changeDeltaFromPopup(sign){
+	fetchUpdatedDefaultDelta();
+	incrementFromPopup(sign*defaultDelta);
+}
+
+function fetchUpdatedDefaultDelta(){
+	//get newest value from background page
+	defaultDelta = chrome.extension.getBackgroundPage().defaultDelta;
+	console.log("Popup got newest delta from background: " + defaultDelta);
 }
 
 var defaultDelta=1;
 // Add action listeners for buttons as soon as the document's DOM is ready.
 document.addEventListener('DOMContentLoaded', function () {
   console.log("LOADED!!");
-  document.getElementById("btnIncrement").addEventListener('click',function(){console.log("decrement from event listener");incrementFromPopup(defaultDelta);});
-  document.getElementById("btnDecrement").addEventListener('click',function(){console.log("decrement from event listener");decrementFromPopup(defaultDelta);});
+  document.getElementById("btnIncrement").addEventListener('click',function(){console.log("decrement from event listener");changeDeltaFromPopup(1);});
+  document.getElementById("btnDecrement").addEventListener('click',function(){console.log("decrement from event listener");changeDeltaFromPopup(-1);});
   
 });

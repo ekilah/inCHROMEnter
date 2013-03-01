@@ -19,15 +19,20 @@
 	
 	<br />
 	
-	<fieldset style="width:90%;min-width:40em;margin-left:auto;margin-right:auto;">
+	<fieldset style="width:90%;min-width:45em;margin-left:auto;margin-right:auto;">
 	<legend> Choose regex(s) to use for URL matching</legend>
 	<table>
-		<tr><td style="min-width:15em"><input type="checkbox" name="default[]" id="default0" >/[\d]{1,16}$/</input></td><td style="min-width:25em" class="description">Captures numbers at the end of the URL, of up to 16 digits</td></tr>
+		<tr><td style="min-width:20em"><input type="checkbox" name="default[]" id="default0" >/[\d]{1,16}$/</input></td><td style="min-width:25em" class="description">Captures numbers at the end of the URL, of up to 16 digits</td></tr>
 		<tr><td><input type="checkbox" name="default[]" id="default1">/(.*\/)([\d]{1,16})([\/]?[.\w]{0,5}$)/</input>
 		</td><td class="description">Caputres numbers at the end of a URL of up to 16 digits that are prepended by a forward slash (/) and optionally followed by another forward slash and/or a 4-character extension, like .html</td></tr>
 		
 	
 	</table>
+	<br>
+	<span><i>Note: You must refresh all existing tabs that you wish your new regex selections to apply to, so the extension can load.</i></span>
+	<br><br>
+	<label for="textDelta"> Change increment/decrement factor: </label><input type="text" id="textDelta" autofocus></input>
+	<br>
 	<button id="btnSave">Apply & Save</button>
 	<button id="btnRestore">Restore Defaults</button>
 	

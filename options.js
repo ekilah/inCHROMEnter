@@ -1,19 +1,27 @@
 
-var options;
+var options, delta;
 
 function loadDefaults(){
+	loadDefaultOptions();
+	loadDefaultDelta();
+}
+function loadDefaultOptions(){
 	options[0] = new objOption("()([\\d]{1,16})($)", true);
 	options[1] = new objOption("(.*\\/)([\\d]{1,16})([\\/]?[.\\w]{0,5}$)", true);
 	console.log("Default options loaded");
 	setCheckboxes();
 	console.log("Initial checkbox values set");
 }
+function loadDefaultDelta(){
+	delta =1;
+	setDeltaBox();
+}
 
 function onScriptStart(){
-	if(localStorage["options"]==null){
-		console.log("Options array was null on entry.");
+	if(localStorage["options"]==null || localStorage["options"]==undefined){
+		console.log("Options array was "+(localStorage["options"]==null ? "null" : "undefined") + " on entry.");
 		options = new Array();
-		loadDefaults();
+		loadDefaultOptions();
 	}
 	else{
 		console.log("Options array was found saved!");
@@ -28,6 +36,17 @@ function onScriptStart(){
 		
 		setCheckboxes();
 	}
+	
+	if(localStorage["delta"]==undefined || Number.isNaN(localStorage["delta"])){
+		loadDefaultDelta();
+		console.log("Delta value could not be loaded... default: " + delta);
+	}else{
+		delta=Number(localStorage["delta"]);
+		console.log("Delta value loaded: " + delta);
+		setDeltaBox();
+	}
+	
+	
 }
 
 function saveOptions(){
@@ -40,13 +59,21 @@ function saveOptions(){
 		}
 	}
 	localStorage["options"] = JSON.stringify(options);
+	
+	delta = Number(document.getElementById("textDelta").value);
+	localStorage["delta"] = delta;
+	chrome.extension.sendMessage({msg:"updateDelta", delta:delta});
+	console.log("Delta value saved: " + localStorage["delta"]);
 }
 
 function restoreDefaults(){
 	options[0]=true;
 	options[1]=true;
-	
 	setCheckboxes();
+	
+	delta=1;
+	chrome.extension.sendMessage({msg:"updateDelta", delta:delta});
+	setDeltaBox();
 }
 
 
@@ -64,6 +91,10 @@ function setCheckboxes(){
 			}
 		}
 	}
+}
+
+function setDeltaBox(){
+	document.getElementById("textDelta").value=delta;
 }
 
  function objOption(regex, enabled){
