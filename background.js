@@ -27,7 +27,7 @@ var patterns;
 		/**
 			The below code is all from options.js:loadDefaults()
 		*/
-			patterns[0] = new objOption("(.*)([\\d]+)($)", true);
+			patterns[0] = new objOption("()([\\d]+)($)", true);
 			patterns[1] = new objOption("(.*\\/)([\\d]+)([\\/]?[.\\w]{0,5}$)", true);
 			console.log("Default options loaded");
 		/** */
@@ -49,6 +49,8 @@ var patterns;
 			console.log("URL: <" + tab.url + "> matched regular expression: " + patterns[i].strRegex);
 			isGoodUrl = true;
 			break;
+		}else if(!patterns[i].enabled.valueOf()){
+			console.log("URL: <" + tab.url + "> matched DISABLED regular expression: " + patterns[i].strRegex);
 		}else{
 			console.log("URL: <" + tab.url + "> DID NOT match regular expression: " + patterns[i].strRegex);
 		}
@@ -99,6 +101,7 @@ chrome.extension.onMessage.addListener(
 				var r = new RegExp(patterns[i].strRegex);
 				console.log("Regex to check: " + r);
 				newurl= oldurl.replace(r, function(fullMatch, pre, num, post){
+					console.log("Full match: " + fullMatch);
 					console.log("Pre: " + pre);
 					console.log("Int parsed for incrementation was: " + num);
 					console.log("Post: " + post);
