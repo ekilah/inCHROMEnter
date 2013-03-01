@@ -96,6 +96,7 @@ chrome.extension.onMessage.addListener(
 			console.log("Patterns retrieved from background: " + patterns);
 			var oldurl = tab.url;
 			var newurl = null;
+			var alerted=false;
 			for(var i in patterns){
 				
 				var r = new RegExp(patterns[i].strRegex);
@@ -106,12 +107,20 @@ chrome.extension.onMessage.addListener(
 					console.log("Int parsed for incrementation was: " + num);
 					
 					console.log("Post: " + post);
-					if(Number(num)==NaN){
+					if(Number(num)==Number.NaN){
 						console.log("Err: No number found to increment using regex: "+ patterns[i]);
-						return null;
+						return fullMatch;
 					}
 					else{
 						console.log("Int parsed for incrementation was (as a number): " + Number(num));
+					}
+					if(Number(num) + delta <= 0){
+						console.error("Cannot handle negative numbers...");
+						if(!alerted){//don't bother whining about a negative number if we already did
+							alert("inCHROMEnter cannot produce negative numbers in URLs, because future string parsing will not interpret the negative sign. Sorry!");
+							alerted = true;
+						}
+						return fullMatch;
 					}
 					return pre + (Number(num)+delta) + post;
 				});
@@ -121,7 +130,7 @@ chrome.extension.onMessage.addListener(
 					return;
 				}
 				else if(newurl==oldurl){
-					console.log("No match...");
+					console.log("No match...or negative number was generated.");
 				}
 			}
 			console.log("******ERROR: NO regex matched!");
