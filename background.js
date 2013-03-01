@@ -18,7 +18,6 @@ var patterns;
 }
  
  function checkForUrlMatch(tabId, changeInfo, tab) {
-	patterns= new Array();
 	var isGoodUrl;// =  tab.url.match(pattern);
 	
 	loadSavedPatterns();
@@ -53,6 +52,7 @@ var patterns;
  
 //Listen for any changes to the URL of any tab.
 chrome.tabs.onUpdated.addListener(checkForUrlMatch);
+//document.addEventListener('DOMContentLoaded', checkForUrlMatch);//do this so that if the script is just loaded, the current tab will be checked immediately.
 console.log("hello?");
 
 var defaultDelta;
@@ -115,8 +115,10 @@ chrome.extension.onMessage.addListener(
 function changeURL(delta){
 	chrome.tabs.getSelected(null, function(tab){
 		console.log("INCREMENT/DECREMENT by: "+delta+" in background");
-		var patterns = chrome.extension.getBackgroundPage().patterns;
-		console.log("Patterns retrieved from background: " + patterns);
+		if(!patterns || patterns=='undefined'){
+			console.log("Current tab needs to load defaults for background script.. hasn't had the chance yet!");
+			loadSavedPatterns();
+		}
 		var oldurl = tab.url;
 		var newurl = null;
 		var alerted=false;
