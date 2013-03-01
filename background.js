@@ -92,7 +92,6 @@ function loadSavedPatterns(){
 chrome.extension.onMessage.addListener(
 	function(request, sender, sendResponse){
 		console.log("Message received..");
-		
 		if(request.msg == "increment"){
 			changeURL(defaultDelta);
 			

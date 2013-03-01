@@ -4,6 +4,7 @@ var options, delta;
 function loadDefaults(){
 	loadDefaultOptions();
 	loadDefaultDelta();
+	saveOptions();
 }
 function loadDefaultOptions(){
 	options[0] = new objOption("()([\\d]{1,16})($)", true);
@@ -14,6 +15,7 @@ function loadDefaultOptions(){
 }
 function loadDefaultDelta(){
 	delta =1;
+	chrome.extension.sendMessage({msg:"updateDelta", delta:delta});
 	setDeltaBox();
 }
 
@@ -72,16 +74,6 @@ function saveOptions(){
 		setDeltaBox();
 		alert("Please enter in a valid, positive number for new delta value. Delta value has not been changed. All regex choices have been saved, though.");	
 	}
-}
-
-function restoreDefaults(){
-	options[0]=true;
-	options[1]=true;
-	setCheckboxes();
-	
-	delta=1;
-	chrome.extension.sendMessage({msg:"updateDelta", delta:delta});
-	setDeltaBox();
 }
 
 
