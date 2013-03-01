@@ -74,38 +74,51 @@ var patterns;
 chrome.tabs.onUpdated.addListener(checkForUrlMatch);
 console.log("hello?");
 
+var defaultDelta=1;
+
 chrome.extension.onMessage.addListener(
 	function(request, sender, sendResponse){
 		console.log("Message received..");
-		
+		var delta;
 		if(request.msg == "increment"){
-			console.log("INCREMENT from background");
-			chrome.tabs.getSelected(null, function(tab){
-				var oldurl = tab.url;
-				var newurl = oldurl.replace(pattern, function(fullMatch, pre, num, post){
+			delta=defaultDelta;
+		}else if(request.msg == "decrement"){
+			delta=-1*defaultDelta;
+		}else{
+			console.log("ERROR: unknown message sent. Contents: " + request.msg);
+			return;
+		}
+		console.log("INCREMENT/DECREMENT by: "+delta+" in background");
+		chrome.tabs.getSelected(null, function(tab){
+			var patterns = chrome.extension.getBackgroundPage().patterns;
+			console.log("Patterns retrieved from background: " + patterns);
+			var oldurl = tab.url;
+			var newurl = null;
+			for(var i in patterns){
+				
+				var r = new RegExp(patterns[i].strRegex);
+				console.log("Regex to check: " + r);
+				newurl= oldurl.replace(r, function(fullMatch, pre, num, post){
 					console.log("Pre: " + pre);
 					console.log("Int parsed for incrementation was: " + num);
 					console.log("Post: " + post);
-					return pre + (Number(num)+1) + post;
+					if(Number(num)==NaN){
+						console.log("Err: No number found to increment using regex: "+ patterns[i]);
+						return null;
+					}
+					return pre + (Number(num)+delta) + post;
 				});
-				console.log("New URL: " + newurl);
-				chrome.tabs.update(tab.tabId, {url: newurl});
-			
-			});
-			}else if(request.msg=="decrement"){
-				console.log("DECREMENT from background");
-				chrome.tabs.getSelected(null, function(tab){
-					var oldurl = tab.url;
-					var newurl = oldurl.replace(pattern, function(fullMatch, pre, num, post){
-						console.log("Pre: " + pre);
-						console.log("Int parsed for decrementation was: " + num);
-						console.log("Post: " + post);
-						return pre + (Number(num)-1) + post;
-					});
+				if(newurl!=null && newurl!=oldurl){
 					console.log("New URL: " + newurl);
 					chrome.tabs.update(tab.tabId, {url: newurl});
-				
-				});
+					return;
+				}
+				else if(newurl==oldurl){
+					console.log("No match...");
+				}
 			}
+			console.log("******ERROR: NO regex matched!");
+		});
+			
 	}
 );
