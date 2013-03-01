@@ -60,10 +60,18 @@ function saveOptions(){
 	}
 	localStorage["options"] = JSON.stringify(options);
 	
-	delta = Number(document.getElementById("textDelta").value);
-	localStorage["delta"] = delta;
-	chrome.extension.sendMessage({msg:"updateDelta", delta:delta});
-	console.log("Delta value saved: " + localStorage["delta"]);
+	var test1 = Number(document.getElementById("textDelta").value);
+	var test2 = Number.isNaN(test1);
+	
+	if(!test2 && test1 > 0){
+		delta = Number(document.getElementById("textDelta").value);
+		localStorage["delta"] = delta;
+		chrome.extension.sendMessage({msg:"updateDelta", delta:delta});
+		console.log("Delta value saved: " + localStorage["delta"]);
+	}else{
+		setDeltaBox();
+		alert("Please enter in a valid, positive number for new delta value. Delta value has not been changed. All regex choices have been saved, though.");	
+	}
 }
 
 function restoreDefaults(){
