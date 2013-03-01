@@ -27,8 +27,8 @@ var patterns;
 		/**
 			The below code is all from options.js:loadDefaults()
 		*/
-			patterns[0] = new objOption("()([\\d]+)($)", true);
-			patterns[1] = new objOption("(.*\\/)([\\d]+)([\\/]?[.\\w]{0,5}$)", true);
+			patterns[0] = new objOption("()([\\d]{1,16})($)", true);
+			patterns[1] = new objOption("(.*\\/)([\\d]{1,16})([\\/]?[.\\w]{0,5}$)", true);
 			console.log("Default options loaded");
 		/** */
 	}else{
@@ -104,10 +104,14 @@ chrome.extension.onMessage.addListener(
 					console.log("Full match: " + fullMatch);
 					console.log("Pre: " + pre);
 					console.log("Int parsed for incrementation was: " + num);
+					
 					console.log("Post: " + post);
 					if(Number(num)==NaN){
 						console.log("Err: No number found to increment using regex: "+ patterns[i]);
 						return null;
+					}
+					else{
+						console.log("Int parsed for incrementation was (as a number): " + Number(num));
 					}
 					return pre + (Number(num)+delta) + post;
 				});
@@ -125,3 +129,16 @@ chrome.extension.onMessage.addListener(
 			
 	}
 );
+
+/*
+console.log("Background.. checking addition. 3072397517134438 + 1 = " + (3072397517134438 + 1));
+console.log("Background.. checking addition. 30723975171344384 + 1 = " + (30723975171344384 + 1));
+console.log("Background.. checking addition. 307239751713443840 + 1 = " + (307239751713443840 + 1));
+console.log("Background.. checking addition. Max value: " + Number.MAX_VALUE);
+
+var x = new Number(307239751713443840 + 1);
+console.log("Background.. checking addition. x = " + x.toString());
+
+x = new Number(307239751713443840);
+x=x+1;
+console.log("Background.. checking addition. x = " + x.toString());*/

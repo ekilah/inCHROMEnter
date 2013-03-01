@@ -16,9 +16,13 @@ function incrementFromPopup(delta){
 				console.log("Pre: " + pre);
 				console.log("Int parsed for incrementation was: " + num);
 				console.log("Post: " + post);
-				if(Number(num)==NaN){
+				if(isNaN(Number(num) + delta) || !isFinite(Number(num) + delta)){
 					console.log("Err: No number found to increment using regex: "+ patterns[i]);
 					return null;
+				}else{
+					console.log("Int parsed for incrementation was (as a number): " + Number(num));
+					var tempNum= Number(num) + delta;
+					console.log("Int parsed after incrementation is (as a number): " +tempNum );
 				}
 				return pre + (Number(num)+delta) + post;
 			});
@@ -28,7 +32,7 @@ function incrementFromPopup(delta){
 				return;
 			}
 			else if(newurl==oldurl){
-				console.log("No match...");
+				console.log("No match... NewURL was found to be: " + newurl);
 			}
 		}
 		console.log("******ERROR: NO regex matched!");

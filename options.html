@@ -22,9 +22,9 @@
 	<fieldset style="width:90%;min-width:40em;margin-left:auto;margin-right:auto;">
 	<legend> Choose regex(s) to use for URL matching</legend>
 	<table>
-		<tr><td style="min-width:15em"><input type="checkbox" name="default[]" id="default0" >/[\d]+$/</input></td><td style="min-width:25em" class="description">Captures numbers at the end of the URL</td></tr>
-		<tr><td><input type="checkbox" name="default[]" id="default1">/(.*\/)([\d]+)([\/]?[.\w]{0,5}$)/</input>
-		</td><td class="description">Caputres numbers at the end of a URL that are prepended by a forward slash (/) and optionally followed by another forward slash and/or a 4-character extension, like .html</td></tr>
+		<tr><td style="min-width:15em"><input type="checkbox" name="default[]" id="default0" >/[\d]{1,16}$/</input></td><td style="min-width:25em" class="description">Captures numbers at the end of the URL, of up to 16 digits</td></tr>
+		<tr><td><input type="checkbox" name="default[]" id="default1">/(.*\/)([\d]{1,16})([\/]?[.\w]{0,5}$)/</input>
+		</td><td class="description">Caputres numbers at the end of a URL of up to 16 digits that are prepended by a forward slash (/) and optionally followed by another forward slash and/or a 4-character extension, like .html</td></tr>
 		
 	
 	</table>
