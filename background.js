@@ -73,7 +73,7 @@ function loadSavedPatterns(){
 			The below code is all from options.js:loadDefaults()
 		*/
 			patterns[0] = new objOption("()([\\d]{1,16})($)", true);
-			patterns[1] = new objOption("(.*\\/)([\\d]{1,16})([\\/]?[.\\w]{0,5}$)", true);
+			patterns[1] = new objOption("(.*\\/[\\d]*?)([\\d]{1,16})([\\/]?[.\\w]{0,5}$)", true);
 			console.log("Default options loaded");
 		/** */
 	}
