@@ -16,24 +16,30 @@ var patterns;
 		console.log("  Now, it is: " + this.enabled.valueOf());
 	}
 }
- 
- function checkForUrlMatch(tabId, changeInfo, tab) {
-	var isGoodUrl;// =  tab.url.match(pattern);
+
+
+function validateUrl(tab){
 	
 	loadSavedPatterns();
 	
 	for(var i in patterns){
 		if(patterns[i].enabled.valueOf() && tab.url.match(patterns[i].objRegex)){
 			console.log("URL: <" + tab.url + "> matched regular expression: " + patterns[i].strRegex);
-			isGoodUrl = true;
-			break;
+			return true;
 		}else if(!patterns[i].enabled.valueOf()){
 			console.log("URL: <" + tab.url + "> matched DISABLED regular expression: " + patterns[i].strRegex);
 		}else{
 			console.log("URL: <" + tab.url + "> DID NOT match regular expression: " + patterns[i].strRegex);
 		}
 	}
+	return false;
+}
 
+ 
+ function checkForUrlMatch(tabId, changeInfo, tab) {
+	var isGoodUrl;// =  tab.url.match(pattern);
+	
+	isGoodUrl = validateUrl(tab);
   
   
   //tab.url.match(/github\.com/);
@@ -93,10 +99,22 @@ chrome.extension.onMessage.addListener(
 	function(request, sender, sendResponse){
 		console.log("Message received..");
 		if(request.msg == "increment"){
-			changeURL(defaultDelta);
+			if(sender.tab && validateUrl(sender.tab)){
+				changeURL(defaultDelta);
+			}else if(!sender.tab){
+				console.error("Sender was not a tab, background could not verify increment request.");
+			}else{
+				console.log("Tab with invalid URL tried to ask for decrement service from background. Failed.");
+			}
 			
 		}else if(request.msg == "decrement"){
-			changeURL(-1*defaultDelta);
+			if(sender.tab && validateUrl(sender.tab)){
+				changeURL(-1*defaultDelta);
+			}else if(!sender.tab){
+				console.error("Sender was not a tab, background could not verify decrement request.");
+			}else{
+				console.log("Tab with invalid URL tried to ask for decrement service from background. Failed.");
+			}
 			
 		}else if(request.msg == "updateDelta"){
 			defaultDelta=request.delta;
