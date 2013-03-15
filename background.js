@@ -64,7 +64,7 @@ console.log("hello?");
 var defaultDelta;
 if(localStorage["delta"]==undefined || Number.isNaN(localStorage["delta"])){
 	defaultDelta=1;
-	console.log("Delta value could not be loaded in background... default: " + delta);
+	console.log("Delta value could not be loaded in background... default: " + defaultDelta);
 }else{
 	defaultDelta=Number(localStorage["delta"]);
 	console.log("Delta value loaded in background: " + defaultDelta);
@@ -99,21 +99,25 @@ chrome.extension.onMessage.addListener(
 	function(request, sender, sendResponse){
 		console.log("Message received..");
 		if(request.msg == "increment"){
-			if(sender.tab && validateUrl(sender.tab)){
-				changeURL(defaultDelta);
+			if(request.validate && request.validate=="no" && request.tab){
+				changeURL(defaultDelta, request.tab);
+			}else if(sender.tab && validateUrl(sender.tab)){
+				changeURL(defaultDelta, sender.tab);
 			}else if(!sender.tab){
 				console.error("Sender was not a tab, background could not verify increment request.");
 			}else{
-				console.log("Tab with invalid URL tried to ask for decrement service from background. Failed.");
+				console.log("Tab with invalid URL tried to ask for increment service w/validation from background. Failed.");
 			}
 			
 		}else if(request.msg == "decrement"){
-			if(sender.tab && validateUrl(sender.tab)){
-				changeURL(-1*defaultDelta);
+			if(request.validate && request.validate=="no" && request.tab){
+				changeURL(-1*defaultDelta, request.tab);
+			}else if(sender.tab && validateUrl(sender.tab)){
+				changeURL(-1*defaultDelta, sender.tab);
 			}else if(!sender.tab){
 				console.error("Sender was not a tab, background could not verify decrement request.");
 			}else{
-				console.log("Tab with invalid URL tried to ask for decrement service from background. Failed.");
+				console.log("Tab with invalid URL tried to ask for decrement service w/validation from background. Failed.");
 			}
 			
 		}else if(request.msg == "updateDelta"){
@@ -130,9 +134,9 @@ chrome.extension.onMessage.addListener(
 
 
 
-function changeURL(delta){
-	chrome.tabs.getSelected(null, function(tab){
-		console.log("INCREMENT/DECREMENT by: "+delta+" in background");
+function changeURL(delta, tab){
+	//chrome.tabs.getSelected(null, function(tab){
+		console.log("INCREMENT/DECREMENT by: "+delta+" in background, from URL: "+tab.url);
 		if(!patterns || patterns=='undefined'){
 			console.log("Current tab needs to load defaults for background script.. hasn't had the chance yet!");
 			loadSavedPatterns();
@@ -177,7 +181,7 @@ function changeURL(delta){
 			}
 		}
 		console.log("******ERROR: NO regex matched!");
-	});
+	//});
 }
 
 /*
