@@ -64,10 +64,10 @@ console.log("hello?");
 var defaultDelta;
 if(localStorage["delta"]==undefined || Number.isNaN(localStorage["delta"])){
 	defaultDelta=1;
-	console.log("Delta value could not be loaded in background... default: " + defaultDelta);
+	console.log("Delta value could not be loaded from storage in background... default: " + defaultDelta);
 }else{
 	defaultDelta=Number(localStorage["delta"]);
-	console.log("Delta value loaded in background: " + defaultDelta);
+	console.log("Delta value loaded from storage in background: " + defaultDelta);
 }
 
 
@@ -100,9 +100,9 @@ chrome.extension.onMessage.addListener(
 		console.log("Message received..");
 		if(request.msg == "increment"){
 			if(request.validate && request.validate=="no" && request.tab){
-				changeURL(defaultDelta, request.tab);
+				changeURL(defaultDelta, request.tab, (request.pad?request.pad=='yes':null));
 			}else if(sender.tab && validateUrl(sender.tab)){
-				changeURL(defaultDelta, sender.tab);
+				changeURL(defaultDelta, sender.tab, (request.pad?request.pad=='yes':null));
 			}else if(!sender.tab){
 				console.error("Sender was not a tab, background could not verify increment request.");
 			}else{
@@ -111,9 +111,9 @@ chrome.extension.onMessage.addListener(
 			
 		}else if(request.msg == "decrement"){
 			if(request.validate && request.validate=="no" && request.tab){
-				changeURL(-1*defaultDelta, request.tab);
+				changeURL(-1*defaultDelta, request.tab, (request.pad?request.pad=='yes':null));
 			}else if(sender.tab && validateUrl(sender.tab)){
-				changeURL(-1*defaultDelta, sender.tab);
+				changeURL(-1*defaultDelta, sender.tab, (request.pad?request.pad=='yes':null));
 			}else if(!sender.tab){
 				console.error("Sender was not a tab, background could not verify decrement request.");
 			}else{
@@ -134,7 +134,7 @@ chrome.extension.onMessage.addListener(
 
 
 
-function changeURL(delta, tab){
+function changeURL(delta, tab, pad){
 	//chrome.tabs.getSelected(null, function(tab){
 		console.log("INCREMENT/DECREMENT by: "+delta+" in background, from URL: "+tab.url);
 		if(!patterns || patterns=='undefined'){
@@ -169,7 +169,51 @@ function changeURL(delta, tab){
 					}
 					return fullMatch;
 				}
-				return pre + (Number(num)+delta) + post;
+				
+				//old strategy
+				//return pre + (Number(num)+delta) + post;
+				
+				//new strategy needed so that leading zeroes are respected
+				//09->10
+				//09->08
+				//10->09 or 10->9 (user's choice...) selected by 'pad' argument
+					//if pad is null, then we need to ask user with an alert
+					//otherwise, they chose somewhere and we can assume they knew what they wanted
+				
+				newLength = String(Number(num)+delta).length;
+				oldLength = String(num).length;
+				newString = String(Number(num)+delta)
+				if(newLength < oldLength){
+					console.log("Considering leading zeroes.");
+					//may need to consider leading zeroes...
+					if(Number(Math.pow(10,oldLength-1)+delta)==(Number(num)+delta)){
+						console.log("\tDigit boundary crossed.");
+						//number rolled over from 10->9 or 100->99 or 1000->999, for example
+						if(pad==null){
+							pad=confirm("Do you want to add a leading zero to decremented number?")
+						}
+						if(pad){
+							console.log("\tPadding... old: " + newString);
+							for(i=0; i<(oldLength-newLength);i++){
+								newString="0".concat(newString);
+							}
+							console.log("\tPadded... new: " + newString);
+						}
+					}else{
+						//did not roll over a digit boundary. this is a case like
+						//09->08, etc.
+						//just do it automatically
+						console.log("\tAuto Padding... old: " + newString);
+						for(i=0; i<(oldLength-newLength);i++){
+							newString="0".concat(newString);
+						}
+						console.log("\tAuto Padded... new: " + newString);
+					}
+				}
+				console.log("Padding considered, new url:" + pre + newString + post);
+				return pre + newString + post;
+				
+				
 			});
 			if(newurl!=null && newurl!=oldurl){
 				console.log("New URL: " + newurl);
