@@ -1,5 +1,7 @@
  //var pattern = /(.*\/)([\d]+)([\/]?[.\w]{0,5}$)/; //if the URL ends in a number, which is preceeded by a forward slash, and optionally followed by a slash and/or optionally followed by an extension of up to 5 characters (including decimal)
 var patterns;
+var defaultDelta;
+
  function objOption(regex, enabled){
 	this.strRegex = regex;
 	this.objRegex = new RegExp(regex);
@@ -61,7 +63,7 @@ chrome.tabs.onUpdated.addListener(checkForUrlMatch);
 //document.addEventListener('DOMContentLoaded', checkForUrlMatch);//do this so that if the script is just loaded, the current tab will be checked immediately.
 console.log("hello?");
 
-var defaultDelta;
+
 if(localStorage["delta"]==undefined || Number.isNaN(localStorage["delta"])){
 	defaultDelta=1;
 	console.log("Delta value could not be loaded from storage in background... default: " + defaultDelta);
@@ -80,7 +82,8 @@ function loadSavedPatterns(){
 		*/
 			patterns[0] = new objOption("()([\\d]{1,16})($)", true);
 			patterns[1] = new objOption("(.*\\/[\\d]*?)([\\d]{1,16})([\\/]?[.\\w]{0,5}$)", true);
-			console.log("Default options loaded");
+			localStorage["options"]=JSON.stringify(patterns);
+			console.log("Default options loaded and saved.");
 		/** */
 	}
 	else{
@@ -92,6 +95,14 @@ function loadSavedPatterns(){
 			patterns[i] = new objOption(temp[i].strRegex, temp[i].enabled.valueOf());
 		}
 	}
+}
+
+function getSavedPadOption(){
+	if(localStorage["pad"]==null || localStorage["pad"]==undefined){
+		console.log("Pad option was "+(localStorage["pad"]==null ? "null" : "undefined") + " on load in background.");
+		localStorage["pad"]="ask";//default option
+	}
+	return (localStorage["pad"]);
 }
 
 
@@ -190,7 +201,14 @@ function changeURL(delta, tab, pad){
 						console.log("\tDigit boundary crossed.");
 						//number rolled over from 10->9 or 100->99 or 1000->999, for example
 						if(pad==null){
-							pad=confirm("Do you want to add a leading zero to decremented number?")
+							tryToLoadPad=getSavedPadOption();
+							
+							if(tryToLoadPad=="ask"){
+								pad=confirm("Do you want to add a leading zero to decremented number?");
+							}else{
+								pad=(tryToLoadPad=="yes"?true:false);
+								console.log("\tDefault pad option from options page being used: " + pad);
+							}
 						}
 						if(pad){
 							console.log("\tPadding... old: " + newString);

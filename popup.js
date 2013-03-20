@@ -19,6 +19,7 @@ padWithZeroes=false;
 function changeLeadingZero(bool){
 	padWithZeroes=(bool?true:false);
 	console.log(padWithZeroes?"Now padding...":"No longer padding...");
+	document.getElementById("chkLeadingZeroes").checked=padWithZeroes;
 }
 
 
@@ -28,4 +29,5 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById("btnIncrement").addEventListener('click',function(){console.log("increment from event listener");requestURLChangeFromBackground(1);});
   document.getElementById("btnDecrement").addEventListener('click',function(){console.log("decrement from event listener");requestURLChangeFromBackground(-1);});
   document.getElementById("chkLeadingZeroes").addEventListener('click',function(){console.log("leading zero button event");changeLeadingZero(document.getElementById("chkLeadingZeroes").checked);});
+  changeLeadingZero(chrome.extension.getBackgroundPage().getSavedPadOption()=='yes');
 });

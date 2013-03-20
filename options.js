@@ -4,6 +4,7 @@ var options, delta;
 function loadDefaults(){
 	loadDefaultOptions();
 	loadDefaultDelta();
+	loadDefaultPad();
 	saveOptions();
 }
 function loadDefaultOptions(){
@@ -19,11 +20,19 @@ function loadDefaultDelta(){
 	setDeltaBox();
 }
 
+function loadDefaultPad(){
+	localStorage["pad"]="ask";//default option
+	document.getElementById("pad").value = localStorage["pad"];
+}
+
 function onScriptStart(){
+	somethingFoundMissing=false;//only re-save things if localStorage is missing something
+	
 	if(localStorage["options"]==null || localStorage["options"]==undefined){
 		console.log("Options array was "+(localStorage["options"]==null ? "null" : "undefined") + " on entry.");
 		options = new Array();
 		loadDefaultOptions();
+		somethingFoundMissing=true;
 	}
 	else{
 		console.log("Options array was found saved!");
@@ -42,12 +51,24 @@ function onScriptStart(){
 	if(localStorage["delta"]==undefined || Number.isNaN(localStorage["delta"])){
 		loadDefaultDelta();
 		console.log("Delta value could not be loaded... default: " + delta);
+		somethingFoundMissing=true;
 	}else{
 		delta=Number(localStorage["delta"]);
 		console.log("Delta value loaded: " + delta);
 		setDeltaBox();
 	}
 	
+	if(localStorage["pad"]==null || localStorage["pad"]==undefined){
+		console.log("Pad option was "+(localStorage["pad"]==null ? "null" : "undefined") + " on load.");
+		loadDefaultPad();
+		somethingFoundMissing=true;
+	}else{
+		document.getElementById("pad").value = localStorage["pad"];
+	}
+	
+	if(somethingFoundMissing){
+		saveOptions();
+	}
 	
 }
 
@@ -61,6 +82,13 @@ function saveOptions(){
 		}
 	}
 	localStorage["options"] = JSON.stringify(options);
+	
+	
+	//collect padding option
+	padSelect = document.getElementById("pad");
+	localStorage["pad"] = padSelect.options[padSelect.selectedIndex].value;
+	console.log("Pad value saved: " + localStorage["pad"]);
+	
 	
 	var test1 = Number(document.getElementById("textDelta").value);
 	var test2 = Number.isNaN(test1);

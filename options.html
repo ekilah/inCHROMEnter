@@ -15,7 +15,7 @@
 	</style>
 </head>
 <body>
-	<h3>inCHROMEnter</h3>v0.4.2 - Monroe Ekilah - <a href="https://github.com/ekilah/inCHROMEnter">GitHub Repo</a><h4>Options Page</h4><hr>
+	<h3>inCHROMEnter</h3>v0.5.0 - Monroe Ekilah - <a href="https://github.com/ekilah/inCHROMEnter">GitHub Repo</a><h4>Options Page</h4><hr>
 	
 	<br />
 	
@@ -30,6 +30,14 @@
 	</table>
 	<br>
 	<span><i>Note: You must refresh all existing tabs that you wish your new regex selections to apply to, so the extension can load.</i></span>
+	<br><br>
+	<label for="pad">Default action for padding with leading 0's:</label>
+	<select name="pad" id="pad">
+		<option value="ask">Ask when necessary</option>
+		<option value="yes">Pad with zeroes</option>
+		<option value="no">Don't pad</option>
+	</select>
+	<br><span><i>Note: This default option will be used when a URL's number is going to have fewer digits than it did before (i.e.: 100 -> 99) and keyboard shortcuts are being used (Alt+'-'). When padding is selected, the decremented URL in my example will use '099' as the new number, whereas without padding it will use '99'). This default can always be overridden when using the popup button interface via the provided checkbox.</i></span>	
 	<br><br>
 	<label for="textDelta"> Change increment/decrement factor: </label><input type="number" id="textDelta" style="width:5em"; autofocus></input>
 	<br>
