@@ -2,13 +2,17 @@ inCHROMEnter
 ============
 Version 0.5.1
 --------
-Latest stable version:  [0.5.1]() as of 3/20/2013. By Monroe Ekilah.
+Latest downloadable stable version:  [0.5.1](http://www-scf.usc.edu/~ekilah/inCHROMEnter/inCHROMEnter-v0.5.1.crx) as of 3/20/2013. By Monroe Ekilah.
 
 ###Welcome to inCHROMEnter!
 A simple Chrome extension to increment/decrement the URL of the current tab for fast browsing.
 
 ###Why
 I got this idea when going through far too many sequential GitHub issues while grading for a course at my university. I wished there was a faster way to browse the issues than manually editing the URL, which conveniently ends in the issue number.
+
+###Install instructions
++ Download the latest downloadable stable version at the link above.
++ Drag the ".crx" file into Chrome's Extensions page (Options->Extensions)
 
 ###Current features
 + Works on any site with the any of the following structures at the end of the URL:
