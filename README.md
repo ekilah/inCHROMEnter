@@ -1,8 +1,8 @@
 inCHROMEnter
 ============
-Version 0.5.0
+Version 0.5.1
 --------
-Latest stable version:  [0.5.0]() as of 3/20/2013. By Monroe Ekilah.
+Latest stable version:  [0.5.1]() as of 3/20/2013. By Monroe Ekilah.
 
 ###Welcome to inCHROMEnter!
 A simple Chrome extension to increment/decrement the URL of the current tab for fast browsing.
