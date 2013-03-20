@@ -197,7 +197,8 @@ function changeURL(delta, tab, pad){
 				if(newLength < oldLength){
 					console.log("Considering leading zeroes.");
 					//may need to consider leading zeroes...
-					if(Number(Math.pow(10,oldLength-1)+delta)==(Number(num)+delta)){
+					exp = Math.pow(10,oldLength-1)
+					if(Number(exp + delta + (Number(num) % exp ))==(Number(num)+delta)){
 						console.log("\tDigit boundary crossed.");
 						//number rolled over from 10->9 or 100->99 or 1000->999, for example
 						if(pad==null){
